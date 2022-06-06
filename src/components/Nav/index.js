@@ -1,26 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { capitalizeFirstLetter } from '../../utils/helpers';
 
-function Nav() {
+function Nav(props) {
+    const {
+        categories = [],
+        setCurrentCategory,
+        currentCategory,
+    } = props;
 
-    const categories = [
-        {
-            name: "commercial",
-            description: "photos of grocery stores, food trucks, and other commercial projects.",
-        },
-        { name: "portraits", description: "portraits of people in my life" },
-        { name: "food", description: "delicious delicacies" },
-        {
-            name: "landscape",
-            description: "fields, farmhouses, waterfalls, and the beauty of nature",
-        },
-    ];
-
-    function categorySelected(name) {
-        console.log(`${name} clicked`);
-    }
+    useEffect(() => {
+        document.title = capitalizeFirstLetter(currentCategory.name);
+    }, [currentCategory]);
 
     return (
-        <header>
+        <header className="flex-row px-1">
             <h2>
                 <a data-testid="link" href="/">
                     <span role="img" aria-label="camera">📸</span> Oh Snap!
@@ -33,16 +26,15 @@ function Nav() {
                             about me
                         </a>
                     </li>
-                    <li>
+                    <li className='mx-2'>
                         <span>contact</span>
                     </li>
                     {categories.map((category) => (
-                    <li 
-                        className="mx-1"
-                        key={category.name}
-                        >
-                        <span onClick={() => categorySelected(category.name)}>
-                            {category.name}
+                    <li className={`mx-1 ${
+                        currentCategory.name === category.name && 'navActive'
+                    }`} key={category.name}>
+                        <span onClick={() => setCurrentCategory(category)}>
+                            {capitalizeFirstLetter(category.name)}
                         </span>
                     </li>
                     ))}
